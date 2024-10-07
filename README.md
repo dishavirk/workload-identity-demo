@@ -1,6 +1,8 @@
 # GCP Workload Identity and Terraform Setup
 
-This repository contains the code and configuration needed to set up **Workload Identity** in **Google Kubernetes Engine (GKE)** using **Terraform**. It also demonstrates how to use **Google Service Accounts (GSA)**, bind them to **Kubernetes Service Accounts (KSA)**, and securely authenticate workloads running in Kubernetes without needing long-lived service account keys.
+This repository contains the code and configuration needed to set up **Workload Identity** in **Google Kubernetes Engine (GKE)** using **Terraform**. 
+
+It also demonstrates how to use **Google Service Accounts (GSA)**, bind them to **Kubernetes Service Accounts (KSA)**, and securely authenticate workloads running in Kubernetes without needing long-lived service account keys.
 
 ## Pre-requisites
 
@@ -23,16 +25,18 @@ This repository covers:
 
 Terraform state is stored in a **Google Cloud Storage (GCS)** bucket for centralized and remote state management. 
 
+My Project ID and GCS bucket name are `workload-identity-demo-2024`and `workload-identity-demo-2024-tf-state` respectively, please replace them with yours in the following commands.
+
 1. Create the bucket using the following command:
 
     ```bash
-    gsutil mb -p [your-project-id] -l us-central1 gs://[your-bucket-name]
+    gsutil mb -p workload-identity-demo-2024 -l us-central1 gs://[your-bucket-name]
     ```
 
 2. Enable versioning on the bucket (optional but recommended for rollback purposes):
 
     ```bash
-    gsutil versioning set on gs://[your-bucket-name]
+    gsutil versioning set on gs://workload-identity-demo-2024-tf-state
     ```
 
 The bucket name and configuration are specified in the `backend.tf` file, which looks like this:
@@ -40,7 +44,7 @@ The bucket name and configuration are specified in the `backend.tf` file, which 
 ```hcl
 terraform {
   backend "gcs" {
-    bucket  = "your-bucket-name"
+    bucket  = "workload-identity-demo-2024-tf-state"
     prefix  = "terraform/state"
   }
 }
@@ -49,7 +53,6 @@ terraform {
 
 Terraform requires a **Google Service Account (GSA)** to authenticate and manage GCP resources. This repository uses a service account JSON key for authentication.
 
-My Project ID is `workload-identity-demo-2024`, please replace it with yours in the following commands.
 
 1. **Create the GSA** for Terraform:
 
