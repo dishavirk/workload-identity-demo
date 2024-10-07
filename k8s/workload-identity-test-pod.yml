@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: workload-identity-test-pod
+  namespace: workload-identity-test
+  annotations:
+    iam.gke.io/gcp-service-account: gke-workload-identity-test@workload-identity-demo-2024.iam.gserviceaccount.com
+spec:
+  serviceAccountName: ksa-workload-identity
+  containers:
+  - name: workload-identity-test-container
+    image: google/cloud-sdk:alpine
+    command: ["/bin/sh"]
+    args:
+    - "-c"
+    - |
+      echo "Testing Workload Identity with gsutil"
+      gcloud auth list
+      gsutil ls gs://workload-identity-demo-2024-tf-state
